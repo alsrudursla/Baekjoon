@@ -1,25 +1,34 @@
 import java.io.*;
 import java.util.*;
+
+// 그리디
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int K = Integer.parseInt(st.nextToken());
+        int N = Integer.parseInt(st.nextToken()); // 동전 종류 개수
+        int K = Integer.parseInt(st.nextToken()); // 총 합
 
-        int[] arr = new int[N];
+        int[] coins = new int[N];
         for (int i = 0; i < N; i++) {
-            arr[i] = Integer.parseInt(br.readLine());
+            coins[i] = Integer.parseInt(br.readLine());
         }
 
-        int coin = 0;
+        int ans = 0;
         for (int i = N-1; i >= 0; i--) {
-            if (arr[i] <= K) {
-                coin += K / arr[i];
-                K = K % arr[i];
+            if (coins[i] > K) {
+                continue;
             }
+            int num = K / coins[i];
+            ans += num;
+
+            K = K - coins[i] * num;
         }
 
-        System.out.println(coin);
+        bw.write(String.valueOf(ans));
+        bw.newLine();
+        bw.flush();
+        bw.close();
     }
 }
