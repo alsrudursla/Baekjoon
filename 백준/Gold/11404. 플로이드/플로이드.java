@@ -1,54 +1,56 @@
 import java.io.*;
 import java.util.*;
 
-// 플로이드 워셜 (최단거리 알고리즘)
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        int cityNum = Integer.parseInt(br.readLine());
-        int busNum = Integer.parseInt(br.readLine());
 
-        int[][] distance = new int[cityNum+1][cityNum+1]; // 인접 행렬로 그래프 표현
-        for (int i = 1; i <= cityNum; i++) {
-            for (int j = 1; j <= cityNum; j++) {
+        int city_num = Integer.parseInt(br.readLine()); // 정점
+        int bus_num = Integer.parseInt(br.readLine()); // 간선
+
+        int[][] path = new int[city_num+1][city_num+1];
+        for (int i = 0; i < city_num+1; i++) {
+            for (int j = 0; j < city_num+1; j++) {
                 if (i == j) {
-                    distance[i][j] = 0; // 자기 자신은 가중치 0
+                    path[i][j] = 0;
                 } else {
-                    distance[i][j] = Integer.MAX_VALUE;
+                    path[i][j] = Integer.MAX_VALUE;
                 }
             }
         }
 
         StringTokenizer st;
-        for (int i = 0; i < busNum; i++) { // 주어진 입력값
+        for (int i = 0; i < bus_num; i++) {
             st = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(st.nextToken());
-            int b = Integer.parseInt(st.nextToken());
-            int c = Integer.parseInt(st.nextToken());
+            int city_start = Integer.parseInt(st.nextToken());
+            int city_end = Integer.parseInt(st.nextToken());
+            int cost = Integer.parseInt(st.nextToken());
 
-            if (c < distance[a][b]) {
-                distance[a][b] = c; // 가중치 저장
+            if (cost < path[city_start][city_end]) {
+                path[city_start][city_end] = cost;
             }
         }
 
-        // 플로이드 점화식
-        for (int k = 1; k <= cityNum; k++) {
-            for (int s = 1; s <= cityNum; s++) {
-                for (int e = 1; e <= cityNum; e++) {
-                    if (distance[s][k] != Integer.MAX_VALUE && distance[k][e] != Integer.MAX_VALUE) { // 오버플로우 방지
-                        distance[s][e] = Math.min(distance[s][e], distance[s][k] + distance[k][e]);
+        // 플로이드
+        for (int k = 1; k <= city_num; k++) { // 경유
+            for (int j = 1; j <= city_num; j++) { // 시작
+                for (int i = 1; i <= city_num; i++) { // 끝
+                    if (path[j][k] != Integer.MAX_VALUE && path[k][i] != Integer.MAX_VALUE) { // 오버플로우 방지
+                        if (path[j][i] > path[j][k] + path[k][i]) {
+                            path[j][i] = path[j][k] + path[k][i];
+                        }
                     }
                 }
             }
         }
 
-        for (int i = 1; i <= cityNum; i++) {
-            for (int j = 1; j <= cityNum; j++) {
-                if (distance[i][j] == Integer.MAX_VALUE) {
+        for (int i = 1; i <= city_num; i++) {
+            for (int j = 1; j <= city_num; j++) {
+                if (path[i][j] == Integer.MAX_VALUE) {
                     bw.write("0 ");
                 } else {
-                    bw.write(distance[i][j] + " ");
+                    bw.write(path[i][j] + " ");
                 }
             }
             bw.newLine();
