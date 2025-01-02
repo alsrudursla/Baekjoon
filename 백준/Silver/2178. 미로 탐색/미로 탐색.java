@@ -1,55 +1,64 @@
 import java.io.*;
 import java.util.*;
+
 public class Main {
-    // 상하좌우 탐색
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {-1, 0, 1, 0};
-
-    static boolean[][] visited; // 방문 체크 배열
-    static int[][] miro; // 주어진 배열
-    static int N, M;
-
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        N = Integer.parseInt(st.nextToken());
-        M = Integer.parseInt(st.nextToken());
-        visited = new boolean[N][M];
-        miro = new int[N][M];
 
-        for (int i = 0; i < N; i++) {
-            st = new StringTokenizer(br.readLine());
-            String line = st.nextToken();
-            for (int j = 0; j < M; j++) {
-                miro[i][j] = Integer.parseInt(line.substring(j, j+1));
+        int N = Integer.parseInt(st.nextToken());
+        int M = Integer.parseInt(st.nextToken());
+
+        int[][] miro = new int[N+1][M+1];
+        boolean[][] visited = new boolean[N+1][M+1];
+
+        for (int i = 1; i <= N; i++) {
+            String line = br.readLine();
+            char[] tmp_arr = line.toCharArray();
+            for (int j = 1; j <= M; j++) {
+                int input = Integer.parseInt(String.valueOf(tmp_arr[j-1]));
+                miro[i][j] = input;
             }
         }
 
-        BFS(0,0);
+        int ans = bfs(miro, visited, N, M);
 
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-        bw.write(String.valueOf(miro[N-1][M-1]));
+        bw.write(String.valueOf(ans));
+        bw.newLine();
         bw.flush();
         bw.close();
     }
 
-    private static void BFS(int i, int j) {
-        Queue<int[]> queue = new LinkedList<>();
-        queue.offer(new int[] {i, j});
-        visited[i][j] = true;
-        while (!queue.isEmpty()) {
-            int[] now = queue.poll();
-            for (int k = 0; k < 4; k++) { // 상하좌우 탐색
-                int x = now[0] + dx[k];
-                int y = now[1] + dy[k];
-                if (x >= 0 && y>= 0 && x < N && y < M) {
-                    if (miro[x][y]!=0 && !visited[x][y]) {
-                        visited[x][y] = true;
-                        miro[x][y] = miro[now[0]][now[1]] + 1;
-                        queue.add(new int[] {x, y});
-                    }
+    private static int bfs(int[][] miro, boolean[][] visited, int N, int M) {
+        Queue<int[]> myqueue = new LinkedList<>(); // y, x, move
+        myqueue.add(new int[]{1,1,1});
+
+        int[] dy = {-1, 0, 1, 0};
+        int[] dx = {0, 1, 0, -1};
+
+        while (!myqueue.isEmpty()) {
+            int[] now = myqueue.poll();
+            int now_y = now[0];
+            int now_x = now[1];
+            int now_move = now[2];
+
+            if (now_y == N && now_x == M) {
+                return now_move;
+            }
+
+            for (int k = 0; k < 4; k++) {
+                int y = now_y + dy[k];
+                int x = now_x + dx[k];
+
+                if (1 <= y && y <= N && 1 <= x && x <= M &&
+                        miro[y][x] == 1 && !visited[y][x]) {
+                    visited[y][x] = true;
+                    myqueue.add(new int[]{y,x,now_move+1});
                 }
             }
         }
+
+        return 0;
     }
 }
