@@ -3,7 +3,6 @@ import java.util.*;
 public class Main {
     static int[][] map;
     static List<int[]> chicken;
-    static boolean[] visited;
     static int N, ans;
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,9 +23,7 @@ public class Main {
                 if (map[i][j] == 2) chicken.add(new int[]{i, j});
             }
         }
-
-        visited = new boolean[chicken.size()];
-
+        
         for (int i = 1; i <= M; i++) {
             List<int[]> tmp = new ArrayList<>();
             calculate(i, 0, tmp, 0);
@@ -46,11 +43,8 @@ public class Main {
         }
 
         for (int i = idx; i < chicken.size(); i++) {
-            if (visited[i]) continue;
-            visited[i] = true;
             tmp.add(chicken.get(i));
             calculate(target, now+1, tmp, i+1);
-            visited[i] = false;
             tmp.remove(tmp.size() - 1);
         }
     }
