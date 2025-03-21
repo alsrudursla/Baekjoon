@@ -1,52 +1,30 @@
-/*
-- union-find
-- hashset : 중복을 허용하지 않음
-*/
-import java.util.*;
 class Solution {
-    static int[] arr;
+    boolean[] visited;
     public int solution(int n, int[][] computers) {
-        // union - find ??? 최초의 연결 시작점을 찾아야 되는 거 아닌감
-        arr = new int[n];
+        // 네트워크의 개수를 return
+        visited = new boolean[n];
+        
+        int network = 0;
         for (int i = 0; i < n; i++) {
-            arr[i] = i;
+            // i 번 컴퓨터의 연결 정보 확인
+            if (visited[i]) continue;
+            visited[i] = true;
+            
+            connect(computers, i);
+            network++;
         }
         
-        int N = computers.length;
-        int M = computers[0].length;
-        
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < M; j++) {
-                if (computers[i][j] == 1) {
-                    if (i == j) continue;
-                    change_val(i, j);
-                }
-            }
-        }
-        
-        HashSet<Integer> myhash = new HashSet<>();
-        for (int i = 0; i < arr.length; i++) {
-            myhash.add(find(arr[i]));
-        }
-        
-        return myhash.size();
+        return network;
     }
     
-    private static void change_val(int i, int j) {
-        i = find(i);
-        j = find(j);
-        
-        if (i != j) {
-            if (i < j) {
-                arr[j] = i;
-            } else {
-                arr[i] = j;
+    private void connect(int[][] computers, int number) {
+        for (int i = 0; i < computers[number].length; i++) {
+            // 해당 컴퓨터 연결 정보 배열 돌기
+            int now = computers[number][i];
+            if (now == 1 && !visited[i]) {
+                visited[i] = true;
+                connect(computers, i);
             }
-        } 
-    }
-    
-    private static int find(int num) {
-        if (num == arr[num]) return num;
-        return arr[num] = find(arr[num]);
+        }
     }
 }
