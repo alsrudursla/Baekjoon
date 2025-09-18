@@ -24,22 +24,41 @@ class Main {
         }
 
         boolean chk = false;
-        int before = -1;
+        int beforeG = -1;
+        int beforeS = -1;
+        int beforeB = -1;
         int rank = 0;
-        // 금메달 개수로 판별
         while (!pq.isEmpty()) {
-            if (pq.peek()[1] == 0) break;
             int[] now = pq.poll();
             int cid = now[0];
             int gold = now[1];
+            int silver = now[2];
+            int bronze = now[3];
 
-            if (before == -1) {
-                before = gold;
+            // 첫 번째 원소일 때
+            if (beforeG == -1) {
+                beforeG = gold;
+                beforeS = silver;
+                beforeB = bronze;
                 rank++;
-            } else {
-                if (before != gold) {
+            } else { // 그 외
+                if (beforeG == gold) {
+                    if (beforeS == silver) {
+                        // 모두 동일하면 rank 도 동일, 그대로 넘어감
+                        if (beforeB != bronze) {
+                            beforeB = bronze;
+                            rank++;
+                        }
+                    } else {
+                        beforeS = silver;
+                        beforeB = bronze;
+                        rank++;
+                    }
+                } else {
+                    beforeG = gold;
+                    beforeS = silver;
+                    beforeB = bronze;
                     rank++;
-                    before = gold;
                 }
             }
 
@@ -48,61 +67,6 @@ class Main {
             if (cid == target) {
                 chk = true;
                 break;
-            }
-        }
-
-        // 은메달 개수로 판별
-        if (!chk) {
-            before = -1;
-            while (!pq.isEmpty()) {
-                if (pq.peek()[2] == 0) break;
-                int[] now = pq.poll();
-                int cid = now[0];
-                int silver = now[2];
-
-                if (before == -1) {
-                    before = silver;
-                    rank++;
-                } else {
-                    if (before != silver) {
-                        rank++;
-                        before = silver;
-                    }
-                }
-
-                //System.out.println(cid + " " + rank);
-
-                if (cid == target) {
-                    chk = true;
-                    break;
-                }
-            }
-        }
-
-        // 동메달 개수로 판별
-        if (!chk) {
-            before = -1;
-            while (!pq.isEmpty()) {
-                int[] now = pq.poll();
-                int cid = now[0];
-                int bronze = now[3];
-
-                if (before == -1) {
-                    before = bronze;
-                    rank++;
-                } else {
-                    if (before != bronze) {
-                        rank++;
-                        before = bronze;
-                    }
-                }
-
-                //System.out.println(cid + " " + rank);
-
-                if (cid == target) {
-                    chk = true;
-                    break;
-                }
             }
         }
         
