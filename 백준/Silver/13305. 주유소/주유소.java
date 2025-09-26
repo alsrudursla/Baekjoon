@@ -8,16 +8,16 @@ class Main {
         int cityCnt = Integer.parseInt(br.readLine());
 
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int[] cityDistance = new int[cityCnt-1];
-        for (int i = 0; i < cityCnt-1; i++) cityDistance[i] = Integer.parseInt(st.nextToken());
+        Long[] cityDistance = new Long[cityCnt-1];
+        for (int i = 0; i < cityCnt-1; i++) cityDistance[i] = Long.parseLong(st.nextToken());
 
         st = new StringTokenizer(br.readLine());
-        int[] oilPrice = new int[cityCnt];
-        for (int i = 0; i < cityCnt; i++) oilPrice[i] = Integer.parseInt(st.nextToken());
+        Long[] oilPrice = new Long[cityCnt];
+        for (int i = 0; i < cityCnt; i++) oilPrice[i] = Long.parseLong(st.nextToken());
 
         int lowestNode = findLowestNode(oilPrice);
         int now_node = 0;
-        int totalPrice = 0;
+        long totalPrice = 0;
         while (now_node < cityCnt-1) {
             // 내가 가장 적은 주유비일 때
             if (now_node == lowestNode) {
@@ -39,15 +39,15 @@ class Main {
         bw.close();
     }
 
-    private static int findNextLowestNode(int start_node, int[] oilPrice) {
+    private static int findNextLowestNode(int start_node, Long[] oilPrice) {
         for (int i = start_node+1; i < oilPrice.length-1; i++) {
             if (oilPrice[i] < oilPrice[start_node]) return i;
         }
         return start_node;
     }
 
-    private static int findLowestNode(int[] oilPrice) {
-        int lowestPrice = Integer.MAX_VALUE;
+    private static int findLowestNode(Long[] oilPrice) {
+        Long lowestPrice = Long.MAX_VALUE;
         int nodeIdx = -1;
         for (int i = 0; i < oilPrice.length-1; i++) {
             if (oilPrice[i] < lowestPrice) {
@@ -58,8 +58,8 @@ class Main {
         return nodeIdx;
     }
 
-    private static int calculateOilLeter(int start_node, int end_node, int[] cityDistance) {
-        int total = 0;
+    private static Long calculateOilLeter(int start_node, int end_node, Long[] cityDistance) {
+        Long total = 0L;
         for (int i = start_node; i < end_node; i++) total += cityDistance[i];
         return total;
     }
