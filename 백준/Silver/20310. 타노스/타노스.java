@@ -22,9 +22,23 @@ class Main {
                 for (int i = 0; i < input.length()/2; i++) bw.write("0");
             } else {
                 int newZeroCnt = zeroCnt / 2;
-                for (int i = 0; i < newZeroCnt; i++) bw.write("0");
                 int newOneCnt = input.length() / 2 - newZeroCnt;
-                for (int i = 0; i < newOneCnt; i++) bw.write("1");
+                // 1은 앞에서부터 지우고, 0은 뒤에서부터 지우기
+                int cnt = 0;
+                StringBuffer sb = new StringBuffer();
+                for (int i = input.length()-1; i >= 0; i--) {
+                    if (input.charAt(i) == '0' && cnt != newZeroCnt) cnt++;
+                    else sb.append(input.charAt(i));
+                }
+                
+                String tmpInput = sb.reverse().toString();
+                StringBuffer sb2 = new StringBuffer();
+                cnt = 0;
+                for (int i = 0; i < tmpInput.length(); i++) {
+                    if (tmpInput.charAt(i) == '1' && cnt != newOneCnt) cnt++;
+                    else sb2.append(tmpInput.charAt(i));
+                }
+                bw.write(sb2.toString());
             }
         }
         
