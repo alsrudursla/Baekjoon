@@ -5,14 +5,9 @@ class Main {
         Scanner sc = new Scanner(System.in);
         int testcase = sc.nextInt();
 
-        List<int[]> idxNval = new ArrayList<>(); // 인덱스, 값
         int[] arr = new int[testcase];
-        for (int i = 0; i < testcase; i++) {
-            int value = sc.nextInt();
-            idxNval.add(new int[]{i, value});
-            arr[i] = value;
-        }
-        Collections.sort(idxNval, (o1, o2) -> o1[1] - o2[1]);
+        for (int i = 0; i < testcase; i++) arr[i] = sc.nextInt();
+        Arrays.sort(arr);
 
         int answer = 0;
         for (int i = 0; i < arr.length; i++) {
@@ -23,12 +18,13 @@ class Main {
             int sidx = 0;
             int eidx = testcase-1;
             while (sidx < eidx) {
-                if (idxNval.get(sidx)[0] == targetIdx) sidx++;
-                else if (idxNval.get(eidx)[0] == targetIdx) eidx--;
+                // 내 인덱스는 넘기기
+                if (sidx == targetIdx) sidx++;
+                else if (eidx == targetIdx) eidx--;
                 else {
-                    long sum = (long)idxNval.get(sidx)[1] + (long)idxNval.get(eidx)[1];
-                    if (sum > (long)target) eidx--;
-                    else if (sum < (long)target) sidx++;
+                    long sum = arr[sidx] + (long)arr[eidx];
+                    if (sum > target) eidx--;
+                    else if (sum < target) sidx++;
                     else {
                         answer++;
                         break;
